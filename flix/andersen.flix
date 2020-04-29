@@ -1,3 +1,7 @@
+use Core/Io/File.File;
+use Core/Io/IOError.IOError;
+
+
 rel Move(to: Str, from: Str)
 rel Alloc(var: Str, object: Str, inMeth: Str)
 rel Load(to: Str, base: Str, attr: Str)
@@ -851,22 +855,22 @@ def getFacts(l: List[Str]): #{Move, Alloc, Load,
         case x :: xs => getFact(x) <+> getFacts(xs)
     }
 
-def readMoveFacts(path: Path): Result[#{Move, Alloc, Load,
+def readMoveFacts(file: File): Result[#{Move, Alloc, Load,
   Store, VCall, SCall, ObjectIsFunction, PotentialAllocationSite, ObjectIsClass, IsClassFor[Str], SelfVar, ClsVar,
   IsBaseFor, IsParentFor, IsNewFor, IsParentTrans, FormalArg, ActualArg, FormalReturn,
   ActualReturn, VarPointsTo[Str, Str], CallGraph[Str], AttrPointsTo[Str],
    InterProcAssign[Str], Reachable[Str], OutOfScopeIn},
-                                  Path.IOError] & Impure =
-    Result.map(getFacts, Path.readLines(path))
+                                  IOError] & Impure =
+    Result.map(getFacts, Core/Io/File.readLines(file))
 
 def main(): #{ Move, Alloc, Load,
   Store, VCall, SCall, ObjectIsFunction, PotentialAllocationSite, ObjectIsClass, IsClassFor[Str], SelfVar, ClsVar,
   IsBaseFor, IsParentFor, IsNewFor, IsParentTrans, FormalArg, ActualArg, FormalReturn,
   ActualReturn, VarPointsTo[Str, Str], CallGraph[Str], AttrPointsTo[Str],
    InterProcAssign[Str], Reachable[Str], OutOfScopeIn} & Impure =
-    let movePath = Path.new("output.csv");
+    let moveFile = Core/Io/File.new("output.csv");
     let rules = getRules(strMerge, strRecord, "");
-    match readMoveFacts(movePath) with {
+    match readMoveFacts(moveFile) with {
         case Ok(facts) =>
             let result = solve (facts <+> rules);
             project VarPointsTo result
