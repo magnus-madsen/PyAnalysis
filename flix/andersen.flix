@@ -40,7 +40,7 @@ def strRecord(_object: Str, ctx: Str) : Str = ctx
 def _listMerge(_object: Str, _octx: List[Str], invo: Str, _ctx: List[Str]) : List[Str] = invo::Nil
 def _listRecord(_object: Str, ctx: List[Str]) : List[Str] = ctx
 
-def getRules(merge: (Str, octx, Str, ctx) -> ctx, record : (Str, ctx) -> octx, empty_ctx : ctx) : #{Move, Alloc, Load,
+def getRules(merge: (Str, ctx, Str, ctx) -> ctx, record : (Str, ctx) -> ctx, empty_ctx : ctx) : #{Move, Alloc, Load,
   Store, VCall, SCall, ObjectIsFunction, PotentialAllocationSite, ObjectIsClass, IsClassFor[Str], SelfVar, ClsVar,
   IsBaseFor, IsParentFor, IsNewFor, IsParentTrans, FormalArg, ActualArg, FormalReturn,
   ActualReturn, VarPointsTo[Str, Str], CallGraph[Str], AttrPointsTo[Str],
